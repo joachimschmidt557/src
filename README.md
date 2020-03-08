@@ -10,6 +10,13 @@ A small POSIX `sh` script which manages source directories for you.
 * Support for git repositories, tarballs and zip archives
 * Compare the actual state of a directory with the content the srcfile dictates
 
+## Get started
+
+``` sh
+$ git clone https://github.com/joachimschmidt557/src
+$ sudo make install
+```
+
 ## Usage
 
 ```
@@ -32,8 +39,9 @@ Flags:
 ### Many source repositories
 
 If you like to keep track of source directories (git repositories and tarballs)
-then src will help you keeping track of these. In addition, when moving to a new
-machine, you can just copy your `.srcfile` and type `src u` and you're all set.
+then src will help you with keeping track of these. In addition, when moving to
+a new machine, you can just copy your `.srcfile` and type `src u` and you're all
+set.
 
 ### Alternative to git submodules
 
