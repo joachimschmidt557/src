@@ -44,11 +44,12 @@ manages source directories
 Usage: src [COMMAND]
 
 Commands:
-	u, update	Update source directory
-	ls, list	List managed directories
 	a, add		Add a source
-	rm, remove	Remove a source directory
+	d, diff		Compare actual state of directory with wanted state
 	i, install	Install a copy of this script into the current directory
+	ls, list	List managed directories
+	rm, remove	Remove a source directory
+	u, update	Update source directory
 
 Flags:
 	--help, -h	Displays this help
