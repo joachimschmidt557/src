@@ -143,12 +143,15 @@ cleanup() {
 	rm "$tmp"
 }
 
-update_all() {
-	## Parse srcfile and update everything
+cmd_update() {
+	## Parse srcfile and update
 	preproc
 
+	# With no arguments, update all
 	while read -r type url path; do
-		update_item "$type" "$url" "$path"
+		if [ -z "$1" ] || [ "$1" = "$path" ] ; then
+			update_item "$type" "$url" "$path"
+		fi
 	done < "$tmp"
 
 	if [ -n "$errors" ]; then
@@ -164,7 +167,7 @@ update_all() {
 	cleanup
 }
 
-list_all() {
+cmd_list() {
 	## Parse srcfile and list all source directories which should be managed by
 	## src
 	preproc
@@ -174,7 +177,7 @@ list_all() {
 	cleanup
 }
 
-diff_all() {
+cmd_diff() {
 	## Show the difference of the sourcefile and the actual content of the
 	## directory
 	preproc
@@ -198,7 +201,7 @@ diff_all() {
 	cleanup
 }
 
-install_into_cd() {
+cmd_install() {
 	## Install a copy of this script into the current working directory
 	script_path="$(realpath "$0")"
 	if install -m755 "$script_path" "$(pwd)"; then
@@ -208,25 +211,27 @@ install_into_cd() {
 	fi
 }
 
-case "$1" in
+cmd="$1"
+shift
+case "$cmd" in
 	"u"|"update")
-		update_all
+		cmd_update "$@"
 		;;
 	"a"|"add")
-		add_item "$2" "$3" "$4"
-		update_item "$2" "$3" "$4"
+		add_item "$@"
+		update_item "$@"
 		;;
 	"rm"|"remove")
-		rm_item "$2"
+		rm_item "$@"
 		;;
 	"ls"|"list")
-		list_all
+		cmd_list
 		;;
 	"d"|"diff")
-		diff_all
+		cmd_diff
 		;;
 	"i"|"install")
-		install_into_cd
+		cmd_install
 		;;
 	"--help"|"-h")
 		usage
