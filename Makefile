@@ -1,5 +1,7 @@
 PREFIX=/usr/local
 
+all: src
+
 install:
 	install -Dm755 src $(DESTDIR)$(PREFIX)/bin/src
 
@@ -9,4 +11,4 @@ uninstall:
 test:
 	shellcheck src
 
-.PHONY: install uninstall test
+.PHONY: all install uninstall test
