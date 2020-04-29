@@ -8,7 +8,7 @@ install:
 uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/bin/src
 
-test:
+check:
 	shellcheck src
 
 .PHONY: all install uninstall test

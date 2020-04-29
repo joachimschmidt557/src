@@ -1,11 +1,13 @@
-with import <nixpkgs> {};
+{ pkgs ? import <nixpkgs> {} }:
 
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   name = "src";
-  src = builtins.fetchGit {
-    url = "https://github.com/joachimschmidt557/src";
-    ref = "master";
-  };
+
+  src = ./.;
+  # src = builtins.fetchGit {
+  #   url = "https://github.com/joachimschmidt557/src";
+  #   ref = "master";
+  # };
 
   installPhase = ''
     mkdir -p $out/bin
