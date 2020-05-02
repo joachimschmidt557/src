@@ -12,8 +12,9 @@ A small POSIX `sh` script which manages source directories for you.
 
 ## Get started
 
-``` sh
+``` shell
 $ git clone https://github.com/joachimschmidt557/src
+$ cd src
 $ sudo make install
 ```
 
