@@ -88,8 +88,10 @@ update_gitrepo() {
 update_tarfile() {
 	## Download and extract this tarfile if it doesn't exist yet
 	if ! [ -d "$2" ] ; then
-		wget "$1"
-		tar -xf "$1" -C "$2"
+		filename=$(basename "$1")
+		wget "$1" -O "$filename"
+		mkdir "$2"
+		tar -xf "$filename" -C "$2" --strip-components=1
 		updated="$updated $2"
 	else
 		echo "Already downloaded"
@@ -99,7 +101,7 @@ update_tarfile() {
 update_zipfile() {
 	## Download and extract this zipfile if it doesn't exist yet
 	if ! [ -d "$2" ] ; then
-		wget "$1" "${2}.zip"
+		wget "$1" -O "${2}.zip"
 		unzip "${2}.zip" -d "$2"
 		updated="$updated $2"
 	else
