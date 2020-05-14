@@ -9,8 +9,10 @@ pkgs.stdenv.mkDerivation rec {
   #   ref = "master";
   # };
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp src $out/bin
-  '';
+  buildInputs = with pkgs; [
+    wget
+    unzip
+  ];
+
+  makeFlags = [ "PREFIX=$(out)" ];
 }
