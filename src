@@ -45,6 +45,7 @@ Usage: src [COMMAND]
 
 Commands:
 	a, add		Add a source
+	e, edit		Edit the .srcfile of the current directory
 	d, diff		Compare actual state of directory with wanted state
 	i, install	Install a copy of this script into the current directory
 	ls, list	List managed directories
@@ -213,6 +214,11 @@ cmd_install() {
 	fi
 }
 
+cmd_edit() {
+	## Edit the srcfile of the current directory
+	"$EDITOR" "$srcfile"
+}
+
 cmd="$1"
 shift
 case "$cmd" in
@@ -234,6 +240,9 @@ case "$cmd" in
 		;;
 	"i"|"install")
 		cmd_install
+		;;
+	"e"|"edit")
+		cmd_edit
 		;;
 	"--help"|"-h")
 		usage
