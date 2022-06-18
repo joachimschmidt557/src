@@ -11,4 +11,4 @@ uninstall:
 check:
 	shellcheck src
 
-.PHONY: all install uninstall test
+.PHONY: all install uninstall check
