@@ -1,7 +1,5 @@
 # src
 
-[![Build Status](https://travis-ci.org/joachimschmidt557/src.svg?branch=master)](https://travis-ci.org/joachimschmidt557/src)
-
 A small POSIX `sh` script which manages source directories for you.
 
 ## Features
