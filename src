@@ -44,33 +44,20 @@ manages source directories
 Usage: src [COMMAND]
 
 Commands:
-	a, add		Add a source
+	a, add		Add a source directory to the srcfile and initializes it
 	e, edit		Edit the .srcfile of the current directory
-	d, diff		Compare actual state of directory with wanted state
+	d, diff		Compare current state of the directory with all
+	   		directories specified in the srcfile
 	i, install	Install a copy of this script into the current directory
-	ls, list	List managed directories
-	rm, remove	Remove a source directory
-	u, update	Update source directory
+	ls, list	List available sources and their install state
+	rm, remove	Remove a source directory from the srcfile
+	u, update	Update a source directory if it already exists, otherwise
+	   		initialize it
 
 Flags:
 	--help, -h	Displays this help
 	--version, -v	Show version and exit
 EOF
-}
-
-add_item() {
-	## Add this item repo to the srcfile
-	echo "$1" "$2" "$3" >> "$srcfile"
-}
-
-rm_item() {
-	## Remove this entry from the srcfile and delete the source files afterwards
-	tmp="$srcfile.tmp"
-
-	awk "\$3 != \"$1\" { print }" "$srcfile" > "$tmp"
-	mv "$tmp" "$srcfile"
-
-	rm -rf "$1"
 }
 
 update_gitrepo() {
@@ -146,13 +133,30 @@ cleanup() {
 	rm "$tmp"
 }
 
+cmd_add() {
+	## Add this item repo to the srcfile
+	echo "$1" "$2" "$3" >> "$srcfile"
+
+	update_item "$1" "$2" "$3"
+}
+
+cmd_remove() {
+	## Remove this entry from the srcfile and delete the source files afterwards
+	tmp="$srcfile.tmp"
+
+	awk "\$3 != \"$1\" { print }" "$srcfile" > "$tmp"
+	mv "$tmp" "$srcfile"
+
+	rm -rf "$1"
+}
+
 cmd_update() {
 	## Parse srcfile and update
 	preproc
 
 	# With no arguments, update all
 	while read -r type url path; do
-		if [ -z "$1" ] || [ "$1" = "$path" ] ; then
+		if [ -z "$1" ] && [ -d "$path" ] || [ "$1" = "$path" ] ; then
 			update_item "$type" "$url" "$path"
 		fi
 	done < "$tmp"
@@ -175,7 +179,13 @@ cmd_list() {
 	## src
 	preproc
 
-	cut -d' ' -f3 < "$tmp"
+	while read -r type url path; do
+		if [ -d "$path" ] ; then
+			echo "*" "$path"
+		else
+			echo "-" "$path"
+		fi
+	done < "$tmp"
 
 	cleanup
 }
@@ -226,23 +236,22 @@ case "$cmd" in
 		cmd_update "$@"
 		;;
 	"a"|"add")
-		add_item "$@"
-		update_item "$@"
+		cmd_add "$@"
 		;;
 	"rm"|"remove")
-		rm_item "$@"
+		cmd_remove "$@"
 		;;
 	"ls"|"list")
-		cmd_list
+		cmd_list "$@"
 		;;
 	"d"|"diff")
-		cmd_diff
+		cmd_diff "$@"
 		;;
 	"i"|"install")
-		cmd_install
+		cmd_install "$@"
 		;;
 	"e"|"edit")
-		cmd_edit
+		cmd_edit "$@"
 		;;
 	"--help"|"-h")
 		usage
